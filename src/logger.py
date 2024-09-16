@@ -2,7 +2,7 @@ import os
 import sys
 import logging
 
-logging_str = '[ %(asctime)s ] %(lineno)d - %(name)s - %(levelname)s: %(message)s'
+logging_str = '[ %(asctime)s ] %(lineno)d  - %(pathname)s - %(name)s - %(levelname)s: %(message)s'
 
 log_dir = "logs"
 
