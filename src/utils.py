@@ -6,6 +6,7 @@ from src.exception import CustomException
 import dill
 from src.logger import logging
 from sklearn.metrics import r2_score
+from sklearn.model_selection import GridSearchCV
 
 
 def save_object(file_path, obj):
@@ -20,13 +21,18 @@ def save_object(file_path, obj):
         logging.error(f"Error in saving object: {str(e)}")
         raise CustomException(f"Error in saving object: {str(e)}", sys.exc_info())
 
-def evaluate_models(X_train, y_train, X_test, y_test, models):
+def evaluate_models(X_train, y_train, X_test, y_test, models, params):
     try:
         model_report = {}
         for i in range(len(list(models))):
             model_name = list(models.keys())[i]
             model = list(models.values())[i]
-            logging.info(f"Training model: {model_name}")
+            para = params[list(models.keys())[i]]
+
+            gs = GridSearchCV(model, para, cv=3)
+            gs.fit(X_train, y_train)
+
+            model.set_params(**gs.best_params_)
 
             model.fit(X_train, y_train)
 
@@ -38,9 +44,9 @@ def evaluate_models(X_train, y_train, X_test, y_test, models):
 
             model_report[list(models.keys())[i]] = test_model_score
 
-            logging.info(f"{model_name} trained successfully")
-            logging.info(f"Train Score: {train_model_score}")
-            logging.info(f"Test Score: {test_model_score}")
+            # logging.info(f"{model_name} trained successfully")
+            # logging.info(f"Train Score: {train_model_score}")
+            # logging.info(f"Test Score: {test_model_score}")
 
         return model_report
     except Exception as e:
