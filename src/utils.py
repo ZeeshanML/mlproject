@@ -52,3 +52,13 @@ def evaluate_models(X_train, y_train, X_test, y_test, models, params):
     except Exception as e:
         logging.error(f"Error in evaluating models: {str(e)}")
         raise CustomException(f"Error in evaluating models: {str(e)}", sys.exc_info())
+
+
+def load_object(file_path):
+    try:
+        with open(file_path, "rb") as file:
+            obj = dill.load(file)
+        return obj
+    except Exception as e:
+        logging.error(f"Error in loading object: {str(e)}")
+        raise CustomException(f"Error in loading object: {str(e)}", sys.exc_info())
